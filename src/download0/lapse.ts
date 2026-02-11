@@ -2143,6 +2143,5 @@ function cleanup () {
 
 function cleanup_fail () {
   utils.notify('Lapse Failed! reboot and try again! UwU')
-  jsmaf.root.children.push(bg_fail)
   cleanup()
 }
