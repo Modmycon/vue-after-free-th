@@ -25,7 +25,7 @@ log('All scripts loaded')
 stats.load()
 
 export function show_success () {
-    stats.incrementSuccess()
+  stats.incrementSuccess()
 }
 
 const is_jailbroken = checkJailbroken()
