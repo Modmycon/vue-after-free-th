@@ -607,9 +607,10 @@ export function binloader_init () {
       BinLoader.init(payload.buf, payload.size)
       if (!skip_autoclose) {
         show_success()
-        log('Waiting 3 seconds...')
         const delay_start = Date.now()
-        while (Date.now() - delay_start < 3000) {}
+        while (Date.now() - delay_start < 3000) {
+        	log('Waited 3 seconds...')
+        }
       }
       BinLoader.run()
       log('Payload loaded successfully')
