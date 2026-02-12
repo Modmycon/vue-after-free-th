@@ -97,7 +97,7 @@ if (!is_jailbroken) {
   const jb_behavior = (typeof CONFIG !== 'undefined' && typeof CONFIG.jb_behavior === 'number') ? CONFIG.jb_behavior : 0
 
   stats.incrementTotal()
-  utils.notify(FW_VERSION + ' Detected!')
+  //utils.notify(FW_VERSION + ' Detected!')
 
   let use_lapse = false
 
