@@ -46,7 +46,7 @@ if (typeof lang === 'undefined') {
     autolapse: true,
     autopoop: false,
     autoclose: true,
-    jb_behavior: 0
+    jb_behavior: 2
   }
 
   // Store user's payloads so we don't overwrite them

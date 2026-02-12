@@ -2,7 +2,7 @@ export const CONFIG = {
   autolapse: true,
   autopoop: false,
   autoclose: true,
-  jb_behavior: 0
+  jb_behavior: 2
 }
 
 export const payloads = [ // to be ran after jailbroken

@@ -195,7 +195,7 @@ try {
             '    autolapse: true,',
             '    autopoop: false,',
             '    autoclose: true,',
-            '    jb_behavior: 0',
+            '    jb_behavior: 2',
             '};',
             '',
             'var payloads = [ //to be ran after jailbroken',
