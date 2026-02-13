@@ -764,7 +764,7 @@ export function binloader_init () {
     if (!is_jailbroken) {
       bin_loader_main()
     } else {
-      if (bl_file_exists('/data/payloads/elfldr.elf') && (data_size !> 0)) {
+      if (bl_file_exists('/data/payloads/elfldr.elf') && (data_size ! > 0)) {
         bl_load_from_file('/data/payloads/elfldr.elf')
       } else {
         log(payload + ' not found!')
