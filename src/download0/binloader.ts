@@ -744,34 +744,29 @@ export function binloader_init () {
         }
       }
     }
-    
+
     let data_size = 0
-    
-    if (bl_file_exists(DATA_PAYLOAD_PATH)){
-    	data_size = bl_file_exists(DATA_PAYLOAD_PATH)
-    	if (data_size > 0) {
-    		log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
-    		return bl_load_from_file(DATA_PAYLOAD_PATH, false)
-    	}
-    	else{
-    		log('Payload is an empty file')
-    	}
-    }
-    else if (bl_file_exists(goldhen)) {
-    	data_size = bl_file_exists(goldhen)
-    	if (dat_size > 0) {
-    		log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
-    		return bl_load_from_file(goldhen, false)
-    	}
-    	else{
-    		log('Payload is an empty file')
-    	}
-    }
-    
-    else {
-    	log('No payload file found, starting network loader')
-    	utils.notify('No payload found.\nStarting network loader...')
-    	return bl_network_loader()
+
+    if (bl_file_exists(DATA_PAYLOAD_PATH)) {
+      data_size = bl_file_exists(DATA_PAYLOAD_PATH)
+      if (data_size > 0) {
+        log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
+        return bl_load_from_file(DATA_PAYLOAD_PATH, false)
+      } else {
+        log('Payload is an empty file')
+      }
+    } else if (bl_file_exists(goldhen)) {
+      data_size = bl_file_exists(goldhen)
+      if (dat_size > 0) {
+        log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
+        return bl_load_from_file(goldhen, false)
+      } else {
+        log('Payload is an empty file')
+      }
+    } else {
+      log('No payload file found, starting network loader')
+      utils.notify('No payload found.\nStarting network loader...')
+      return bl_network_loader()
     }
   }
 
