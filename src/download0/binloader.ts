@@ -773,14 +773,13 @@ export function binloader_init () {
     if (!is_jailbroken) {
       bin_loader_main()
     } else {
-    	//it seems this is required for selecting and running payloads
-    	//add back to download0.dat or modify the code later so we can run a selected payload
-    	//properly without needing this file.
-    	if (bl_file_exists('/data/payloads/elfldr.elf')) {
-    		bl_load_from_file('/data/payloads/elfldr.elf')
-      }
-      else {
-      	log(payload + ' not found!')
+      // it seems this is required for selecting and running payloads
+      // add back to download0.dat or modify the code later so we can run a selected payload
+      // properly without needing this file.
+      if (bl_file_exists('/data/payloads/elfldr.elf')) {
+        bl_load_from_file('/data/payloads/elfldr.elf')
+      } else {
+        log(payload + ' not found!')
       }
     }
   }
