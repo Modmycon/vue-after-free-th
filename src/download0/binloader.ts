@@ -721,7 +721,9 @@ export function binloader_init () {
 
     const goldhen = '/data/payloads/goldhen.bin'
 
-    if (!bl_file_exists(DATA_PAYLOAD_PATH) && !bl_file_exists(goldhen)) {
+    //don't bother copying from usb if we already have a payload installed, we can always ftp an update
+    //whenever we want without messing about with usb drives.
+    if (!bl_file_exists(DATA_PAYLOAD_PATH) || !bl_file_exists(goldhen)) {
       // Priority 1: Check for USB payload on usb0-usb4 (like BD-JB does)
       for (const usb_path of USB_PAYLOAD_PATHS) {
         const usb_size = bl_file_exists(usb_path)
