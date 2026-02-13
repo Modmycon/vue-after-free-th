@@ -744,33 +744,35 @@ export function binloader_init () {
         }
       }
     }
-
-    // Priority 2: Check for cached /data payload
-    let data_size = bl_file_exists(DATA_PAYLOAD_PATH)
-    if (data_size > 0) {
-      log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
-      return bl_load_from_file(DATA_PAYLOAD_PATH, false)
+    
+    let data_size = 0
+    
+    if (bl_file_exists(DATA_PAYLOAD_PATH)){
+    	data_size = bl_file_exists(DATA_PAYLOAD_PATH)
+    	if (data_size > 0) {
+    		log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
+    		return bl_load_from_file(DATA_PAYLOAD_PATH, false)
+    	}
+    	else{
+    		log('Payload is an empty file')
+    	}
     }
-
-    // Priority 3: Try using goldhen.bin
-    data_size = bl_file_exists(goldhen)
-    if (data_size > 0) {
-      log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
-      return bl_load_from_file(goldhen, false)
+    else if (bl_file_exists(goldhen)) {
+    	data_size = bl_file_exists(goldhen)
+    	if (dat_size > 0) {
+    		log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
+    		return bl_load_from_file(goldhen, false)
+    	}
+    	else{
+    		log('Payload is an empty file')
+    	}
     }
-
-    // Priority 4: Try using elfldr.elf
-    const elfldr = '/data/payloads/elfldr.elf'
-    data_size = bl_file_exists(elfldr)
-    if (data_size > 0) {
-      log('Found cached payload: ' + elfldr + ' (' + data_size + ' bytes)')
-      return bl_load_from_file(elfldr, false)
+    
+    else {
+    	log('No payload file found, starting network loader')
+    	utils.notify('No payload found.\nStarting network loader...')
+    	return bl_network_loader()
     }
-
-    // Priority 5: Fall back to network loader
-    log('No payload file found, starting network loader')
-    utils.notify('No payload found.\nStarting network loader...')
-    return bl_network_loader()
   }
 
   if (!binloader_auto_run_done) {
