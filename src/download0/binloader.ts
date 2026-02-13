@@ -103,13 +103,10 @@ export function binloader_init () {
   const BL_O_TRUNC = 0x400
 
   // USB and data paths (check usb0-usb4 like BD-JB does)
-  const USB_PAYLOAD_PATHS = [
-    '/mnt/usb0/payload.bin',
-    '/mnt/usb1/payload.bin',
-    '/mnt/usb2/payload.bin',
-    '/mnt/usb3/payload.bin',
-    '/mnt/usb4/payload.bin'
-  ]
+  let USB_PAYLOAD_PATHS = ['/mnt']
+  for (let i = 0; i <= 4; i++) {
+    USB_PAYLOAD_PATHS.push('/usb' + i + '/payload.bin')
+  }
   const DATA_PAYLOAD_PATH = '/data/payload.bin'
 
   // S_ISREG macro check - file type is regular file
