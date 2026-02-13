@@ -773,7 +773,7 @@ export function binloader_init () {
     if (!is_jailbroken) {
       bin_loader_main()
     } else {
-    	log(payload + ' not found!')
+      log(payload + ' not found!')
     }
   }
 
