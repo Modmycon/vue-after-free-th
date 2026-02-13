@@ -401,6 +401,31 @@ switch (detectedLocale) {
     lang.configLoaded = '设置已加载'
     break
 
+    case 'th':
+    // Thai
+    lang.jailbreak = 'เจลเบรก'
+    lang.payloadMenu = 'เพย์โหลด'
+    lang.config = 'การตั้งค่า'
+    lang.exit = 'ออก'
+    lang.back = 'ย้อนกลับ'
+    lang.autoLapse = 'Lapse อัตโนมัติ'
+    lang.autoPoop = 'Poop อัตโนมัติ'
+    lang.autoClose = 'ปิดแอปอัตโนมัติ'
+    lang.jbBehavior = 'พฤติกรรม JB'
+    lang.jbBehaviorAuto = 'ตรวจจับอัตโนมัติ'
+    lang.jbBehaviorNetctrl = 'NetControl'
+    lang.jbBehaviorLapse = 'Lapse'
+    lang.totalAttempts = 'จำนวนครั้งทั้งหมด: '
+    lang.successes = 'สำเร็จ: '
+    lang.failures = 'ล้มเหลว: '
+    lang.successRate = 'อัตราความสำเร็จ: '
+    lang.failureRate = 'อัตราความล้มเหลว: '
+    lang.loadingMainMenu = 'กำลังโหลดเมนูหลัก...'
+    lang.mainMenuLoaded = 'โหลดเมนูหลักเรียบร้อย'
+    lang.loadingConfig = 'กำลังโหลดการตั้งค่า...'
+    lang.configLoaded = 'โหลดการตั้งค่าเรียบร้อย'
+    break
+
   case 'en':
   default:
     // English (default) which is already set
