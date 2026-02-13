@@ -743,7 +743,7 @@ export function binloader_init () {
     // Priority 2: Check for cached /data payload
     let data_size = bl_file_exists(DATA_PAYLOAD_PATH)
     if (data_size > 0) {
-    	payload_done = true
+      payload_done = true
       log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
       return bl_load_from_file(DATA_PAYLOAD_PATH, false)
     }
@@ -751,7 +751,7 @@ export function binloader_init () {
     const goldhen = '/data/payloads/goldhen.bin'
     data_size = bl_file_exists(goldhen)
     if (data_size > 0) {
-    	payload_done = true
+      payload_done = true
       log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
       return bl_load_from_file(goldhen, false)
     }
