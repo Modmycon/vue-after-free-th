@@ -103,7 +103,7 @@ export function binloader_init () {
   const BL_O_TRUNC = 0x400
 
   // USB and data paths (check usb0-usb4 like BD-JB does)
-  let USB_PAYLOAD_PATHS = ['/mnt']
+  const USB_PAYLOAD_PATHS = ['/mnt']
   for (let i = 0; i <= 4; i++) {
     USB_PAYLOAD_PATHS.push('/usb' + i + '/payload.bin')
   }
