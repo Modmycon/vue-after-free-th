@@ -8,6 +8,8 @@ import { show_success } from 'download0/loader'
 // Usage: include('binloader.js') before userland/lapse
 //        After lapse completes, call: binloader_init()
 
+let binloader_auto_run_done = false
+
 // Define binloader_init function
 export function binloader_init () {
   log('binloader_init(): Initializing binloader...')
@@ -101,15 +103,11 @@ export function binloader_init () {
   const BL_O_TRUNC = 0x400
 
   // USB and data paths (check usb0-usb4 like BD-JB does)
-  const USB_PAYLOAD_PATHS = [
-    '/mnt/usb0/payload.bin',
-    '/mnt/usb1/payload.bin',
-    '/mnt/usb2/payload.bin',
-    '/mnt/usb3/payload.bin',
-    '/mnt/usb4/payload.bin'
-  ]
+  const USB_PAYLOAD_PATHS = ['/mnt']
+  for (let i = 0; i <= 4; i++) {
+    USB_PAYLOAD_PATHS.push('/usb' + i + '/payload.bin')
+  }
   const DATA_PAYLOAD_PATH = '/data/payload.bin'
-  const DATA_PAYLOAD_PATH_BACKUP = '/data/payloads/goldhen.bin'
 
   // S_ISREG macro check - file type is regular file
   const S_IFREG = 0x8000
@@ -606,8 +604,19 @@ export function binloader_init () {
 
     try {
       BinLoader.init(payload.buf, payload.size)
-      BinLoader.run()
-      log('Payload loaded successfully')
+
+      if (!skip_autoclose) {
+        show_success(true, true)
+        log('Running payload in 3 seconds...')
+        const id = jsmaf.setInterval(function () {
+          jsmaf.clearInterval(id)
+          BinLoader.run()
+          log('Payload loaded successfully')
+        }, 3000)
+      } else {
+        BinLoader.run()
+        log('Payload loaded successfully')
+      }
     } catch (e) {
       log('ERROR loading payload: ' + (e as Error).message)
       if ((e as Error).stack) log((e as Error).stack ?? '')
@@ -707,56 +716,69 @@ export function binloader_init () {
       }
     }
 
-    // Priority 1: Check for USB payload on usb0-usb4 (like BD-JB does)
-    for (const usb_path of USB_PAYLOAD_PATHS) {
-      const usb_size = bl_file_exists(usb_path)
+    const goldhen = '/data/payloads/goldhen.bin'
 
-      if (usb_size > 0) {
-        log('Found USB payload: ' + usb_path + ' (' + usb_size + ' bytes)')
-        utils.notify('USB payload found!\nCopying to /data...')
+    // don't bother copying from usb if we already have a payload installed, we can always ftp an update
+    // whenever we want without messing about with usb drives.
+    if (!bl_file_exists(DATA_PAYLOAD_PATH) || !bl_file_exists(goldhen)) {
+      // Priority 1: Check for USB payload on usb0-usb4 (like BD-JB does)
+      for (const usb_path of USB_PAYLOAD_PATHS) {
+        const usb_size = bl_file_exists(usb_path)
 
-        // Copy USB payload to /data for future use
-        if (bl_copy_file(usb_path, DATA_PAYLOAD_PATH)) {
-          log('Copied to ' + DATA_PAYLOAD_PATH)
-        } else {
-          log('Warning: Failed to copy to /data, running from USB')
+        if (usb_size > 0) {
+          log('Found USB payload: ' + usb_path + ' (' + usb_size + ' bytes)')
+          utils.notify('USB payload found!\nCopying to /data...')
+
+          // Copy USB payload to /data for future use
+          if (bl_copy_file(usb_path, DATA_PAYLOAD_PATH)) {
+            log('Copied to ' + DATA_PAYLOAD_PATH)
+          } else {
+            log('Warning: Failed to copy to /data, running from USB')
+          }
+
+          // Load from USB
+          return bl_load_from_file(usb_path, false)
         }
-
-        // Load from USB
-        return bl_load_from_file(usb_path, false)
       }
     }
 
-    // Priority 2: Check for cached /data payload
-    const data_size = bl_file_exists(DATA_PAYLOAD_PATH)
-    if (data_size > 0) {
-      log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
-      return bl_load_from_file(DATA_PAYLOAD_PATH, false)
-    }
-    // Try using payloads/goldhen.bin
-    const data_size2 = bl_file_exists(DATA_PAYLOAD_PATH_BACKUP)
-    if (data_size2 > 0) {
-      log('Found cached payload: ' + DATA_PAYLOAD_PATH_BACKUP + ' (' + data_size2 + ' bytes)')
-      return bl_load_from_file(DATA_PAYLOAD_PATH_BACKUP, false)
-    }
+    let data_size = 0
 
-    // Priority 3: Fall back to network loader
-    log('No payload file found, starting network loader')
-    utils.notify('No payload found.\nStarting network loader...')
-    return bl_network_loader()
+    if (bl_file_exists(DATA_PAYLOAD_PATH)) {
+      data_size = bl_file_exists(DATA_PAYLOAD_PATH)
+      if (data_size > 0) {
+        log('Found cached payload: ' + DATA_PAYLOAD_PATH + ' (' + data_size + ' bytes)')
+        return bl_load_from_file(DATA_PAYLOAD_PATH, false)
+      } else {
+        log('Payload is an empty file')
+      }
+    } else if (bl_file_exists(goldhen)) {
+      data_size = bl_file_exists(goldhen)
+      if (dat_size > 0) {
+        log('Found cached payload: ' + goldhen + ' (' + data_size + ' bytes)')
+        return bl_load_from_file(goldhen, false)
+      } else {
+        log('Payload is an empty file')
+      }
+    } else {
+      log('No payload file found, starting network loader')
+      utils.notify('No payload found.\nStarting network loader...')
+      return bl_network_loader()
+    }
   }
 
-  // End of binloader_init() function
-  // Call bin_loader_main() to start binloader
-
-  if (!is_jailbroken) {
-    bin_loader_main()
-  } else {
-    if (bl_file_exists('/data/payloads/elfldr.elf')) {
-      // bl_load_from_file('/data/payloads/elfldr.elf')
-      undefined // do nothing (stops this loading automatically)
+  if (!binloader_auto_run_done) {
+    binloader_auto_run_done = true
+    if (!is_jailbroken) {
+      bin_loader_main()
     } else {
-      log(payload + ' not found!')
+      // it seems this is required for selecting and running payloads
+      // even if the elfldr.elf does not exist ???
+      if (bl_file_exists('/data/payloads/elfldr.elf')) {
+        bl_load_from_file('/data/payloads/elfldr.elf')
+      } else {
+        log(payload + ' not found!')
+      }
     }
   }
 
