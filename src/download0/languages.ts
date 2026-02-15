@@ -401,7 +401,7 @@ switch (detectedLocale) {
     lang.configLoaded = '设置已加载'
     break
 
-    case 'th':
+  case 'th':
     // Thai
     lang.jailbreak = 'เจลเบรก'
     lang.payloadMenu = 'เพย์โหลด'
